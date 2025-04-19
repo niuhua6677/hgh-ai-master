@@ -4,6 +4,81 @@
 
 HGH-AI 是一个基于 Spring Boot 和 AI 技术的大模型应用。它集成了 OpenAI 和 Ollama 的聊天模型，使用RAG,Fuction Calling,Prompt等主流大模型应用架构，支持 PDF 知识库处理、课程管理、学校信息查询等功能，适用于教育、客服等场景。
 
+
+以下是 AI 模型应用常见系统架构图，展示了纯 Prompt 回答、RAG（Retrieval-Augmented Generation）和 Function Calling 的架构对比。
+
+```mermaid
+graph TD
+    %% 主标题
+    MainTitle["AI 系统架构"]
+
+    %% 用户输入
+    UserInput["用户输入 (Prompt)"]
+
+    %% 纯 Prompt 回答架构
+    PurePrompt["纯 Prompt 回答"]
+    LLM_Pure["大语言模型 (LLM)"]
+    PureOutput["生成输出"]
+
+    %% RAG 架构
+    RAG["RAG (检索增强生成)"]
+    Retriever["检索器 (Retriever)"]
+    KnowledgeBase["知识库"]
+    LLM_RAG["大语言模型 (LLM)"]
+    RAGOutput["生成输出"]
+
+    %% Function Calling 架构
+    FuncCall["Function Calling"]
+    LLM_Func["大语言模型 (LLM)"]
+    FunctionExecutor["函数执行器"]
+    ExternalAPI["外部 API 或工具"]
+    FuncOutput["生成输出"]
+
+    %% 流程连接：纯 Prompt 回答
+    UserInput --> PurePrompt
+    PurePrompt --> LLM_Pure
+    LLM_Pure --> PureOutput
+
+    %% 流程连接：RAG
+    UserInput --> RAG
+    RAG --> Retriever
+    Retriever --> KnowledgeBase
+    KnowledgeBase --> Retriever
+    Retriever --> LLM_RAG
+    LLM_RAG --> RAGOutput
+
+    %% 流程连接：Function Calling
+    UserInput --> FuncCall
+    FuncCall --> LLM_Func
+    LLM_Func --> FunctionExecutor
+    FunctionExecutor --> ExternalAPI
+    ExternalAPI --> FunctionExecutor
+    FunctionExecutor --> FuncOutput
+```
+
+### 图解说明：
+
+1. **纯 Prompt 回答**：
+
+   - 用户输入直接传递给大语言模型。
+   - 大语言模型根据内部训练的知识生成输出。
+   - 流程简单，但受限于模型的知识范围。
+2. **RAG（检索增强生成）**：
+
+   - 用户输入首先传递给检索器。
+   - 检索器从知识库中检索相关信息。
+   - 检索到的信息与用户输入一起传递给大语言模型。
+   - 大语言模型结合外部知识生成输出。
+   - 适合需要实时访问动态或特定领域知识的场景。
+3. **Function Calling**：
+
+   - 用户输入传递给大语言模型。
+   - 大语言模型解析输入并调用相应的函数。
+   - 函数执行器负责调用外部 API 或工具完成任务。
+   - 执行结果返回给大语言模型，最终生成输出。
+   - 适合需要与外部系统交互或完成复杂任务的场景。
+
+
 ## 技术栈
 
 - **编程语言**: Java 17
@@ -22,6 +97,8 @@ HGH-AI 是一个基于 Spring Boot 和 AI 技术的大模型应用。它集成�
 
 ## 目录结构
 
+### **1. 项目根目录**
+
 ```mermaid
 graph TD
     Root["."]
@@ -29,17 +106,7 @@ graph TD
     Repository["repository"]
     Controller["controller"]
     MainJava["java/com/hgh/ai"]
-    EntityQuery["entity/query"]
-    Tools["tools"]
-    Mapper["mapper"]
-    ServiceImpl["service/impl"]
-    EntityVo["entity/vo"]
-    Model["model"]
     Resources["resources"]
-    EntityPo["entity/po"]
-    Utils["utils"]
-    Service["service"]
-    Constants["constants"]
 
     Root --> Config
     Root --> Repository
@@ -51,6 +118,78 @@ graph TD
     Root --> chat-pdf.json
     Root --> chat-pdf.properties
     Root --> pom.xml
+    Root --> Resources
+```
+
+---
+
+### **2. `config` 目录**
+
+```mermaid
+graph TD
+    Config["config"]
+    CommonConfiguration["CommonConfiguration.java"]
+    MvcConfiguration["MvcConfiguration.java"]
+
+    Config --> CommonConfiguration
+    Config --> MvcConfiguration
+```
+
+---
+
+### **3. `repository` 目录**
+
+```mermaid
+graph TD
+    Repository["repository"]
+    ChatHistoryRepository["ChatHistoryRepository.java"]
+    FileRepository["FileRepository.java"]
+    InMemoryChatHistoryRepository["InMemoryChatHistoryRepository.java"]
+    LocalPdfFileRepository["LocalPdfFileRepository.java"]
+
+    Repository --> ChatHistoryRepository
+    Repository --> FileRepository
+    Repository --> InMemoryChatHistoryRepository
+    Repository --> LocalPdfFileRepository
+```
+
+---
+
+### **4. `controller` 目录**
+
+```mermaid
+graph TD
+    Controller["controller"]
+    ChatController["ChatController.java"]
+    ChatHistoryController["ChatHistoryController.java"]
+    CustomerServiceController["CustomerServiceController.java"]
+    GameController["GameController.java"]
+    PdfController["PdfController.java"]
+
+    Controller --> ChatController
+    Controller --> ChatHistoryController
+    Controller --> CustomerServiceController
+    Controller --> GameController
+    Controller --> PdfController
+```
+
+---
+
+### **5. `java/com/hgh/ai` 目录**
+
+```mermaid
+graph TD
+    MainJava["java/com/hgh/ai"]
+    EntityQuery["entity/query"]
+    Tools["tools"]
+    Mapper["mapper"]
+    ServiceImpl["service/impl"]
+    EntityVo["entity/vo"]
+    Model["model"]
+    EntityPo["entity/po"]
+    Utils["utils"]
+    Service["service"]
+    Constants["constants"]
 
     MainJava --> EntityQuery
     MainJava --> Tools
@@ -63,62 +202,172 @@ graph TD
     MainJava --> Service
     MainJava --> Constants
 
-    Config --> CommonConfiguration.java
-    Config --> MvcConfiguration.java
-
-    Repository --> ChatHistoryRepository.java
-    Repository --> FileRepository.java
-    Repository --> InMemoryChatHistoryRepository.java
-    Repository --> LocalPdfFileRepository.java
-
-    Controller --> ChatController.java
-    Controller --> ChatHistoryController.java
-    Controller --> CustomerServiceController.java
-    Controller --> GameController.java
-    Controller --> PdfController.java
-
     MainJava --> HghAiApplication.java
     MainJava --> MtAiApplication.java
-
-    EntityQuery --> CourseQuery.java
-
-    Tools --> CourseTools.java
-
-    Mapper --> CourseMapper.java
-    Mapper --> CourseReservationMapper.java
-    Mapper --> SchoolMapper.java
-
-    ServiceImpl --> CourseReservationServiceImpl.java
-    ServiceImpl --> CourseServiceImpl.java
-    ServiceImpl --> SchoolServiceImpl.java
-
-    EntityVo --> MessageVO.java
-    EntityVo --> Result.java
-
-    Model --> AlibabaOpenAiChatModel.java
-
-    Resources --> application-local.properties
-    Resources --> application-local.yaml
-    Resources --> application.yaml
-
-    EntityPo --> Course.java
-    EntityPo --> CourseReservation.java
-    EntityPo --> Msg.java
-    EntityPo --> School.java
-
-    Resources --> mapper[/"mapper"/]
-    mapper --> CourseMapper.xml
-    mapper --> CourseReservationMapper.xml
-    mapper --> SchoolMapper.xml
-
-    Utils --> VectorDistanceUtils.java
-
-    Service --> ICourseReservationService.java
-    Service --> ICourseService.java
-    Service --> ISchoolService.java
-
-    Constants --> SystemConstants.java
 ```
+
+---
+
+### **6. `entity/query` 目录**
+
+```mermaid
+graph TD
+    EntityQuery["entity/query"]
+    CourseQuery["CourseQuery.java"]
+
+    EntityQuery --> CourseQuery
+```
+
+---
+
+### **7. `tools` 目录**
+
+```mermaid
+graph TD
+    Tools["tools"]
+    CourseTools["CourseTools.java"]
+
+    Tools --> CourseTools
+```
+
+---
+
+### **8. `mapper` 目录**
+
+```mermaid
+graph TD
+    Mapper["mapper"]
+    CourseMapper["CourseMapper.java"]
+    CourseReservationMapper["CourseReservationMapper.java"]
+    SchoolMapper["SchoolMapper.java"]
+
+    Mapper --> CourseMapper
+    Mapper --> CourseReservationMapper
+    Mapper --> SchoolMapper
+```
+
+---
+
+### **9. `service/impl` 目录**
+
+```mermaid
+graph TD
+    ServiceImpl["service/impl"]
+    CourseReservationServiceImpl["CourseReservationServiceImpl.java"]
+    CourseServiceImpl["CourseServiceImpl.java"]
+    SchoolServiceImpl["SchoolServiceImpl.java"]
+
+    ServiceImpl --> CourseReservationServiceImpl
+    ServiceImpl --> CourseServiceImpl
+    ServiceImpl --> SchoolServiceImpl
+```
+
+---
+
+### **10. `entity/vo` 目录**
+
+```mermaid
+graph TD
+    EntityVo["entity/vo"]
+    MessageVO["MessageVO.java"]
+    Result["Result.java"]
+
+    EntityVo --> MessageVO
+    EntityVo --> Result
+```
+
+---
+
+### **11. `model` 目录**
+
+```mermaid
+graph TD
+    Model["model"]
+    AlibabaOpenAiChatModel["AlibabaOpenAiChatModel.java"]
+
+    Model --> AlibabaOpenAiChatModel
+```
+
+---
+
+### **12. `resources` 目录**
+
+```mermaid
+graph TD
+    Resources["resources"]
+    ApplicationLocalProperties["application-local.properties"]
+    ApplicationLocalYaml["application-local.yaml"]
+    ApplicationYaml["application.yaml"]
+    MapperDir["mapper"]
+
+    Resources --> ApplicationLocalProperties
+    Resources --> ApplicationLocalYaml
+    Resources --> ApplicationYaml
+    Resources --> MapperDir
+
+    MapperDir --> CourseMapperXml["CourseMapper.xml"]
+    MapperDir --> CourseReservationMapperXml["CourseReservationMapper.xml"]
+    MapperDir --> SchoolMapperXml["SchoolMapper.xml"]
+```
+
+---
+
+### **13. `entity/po` 目录**
+
+```mermaid
+graph TD
+    EntityPo["entity/po"]
+    Course["Course.java"]
+    CourseReservation["CourseReservation.java"]
+    Msg["Msg.java"]
+    School["School.java"]
+
+    EntityPo --> Course
+    EntityPo --> CourseReservation
+    EntityPo --> Msg
+    EntityPo --> School
+```
+
+---
+
+### **14. `utils` 目录**
+
+```mermaid
+graph TD
+    Utils["utils"]
+    VectorDistanceUtils["VectorDistanceUtils.java"]
+
+    Utils --> VectorDistanceUtils
+```
+
+---
+
+### **15. `service` 目录**
+
+```mermaid
+graph TD
+    Service["service"]
+    ICourseReservationService["ICourseReservationService.java"]
+    ICourseService["ICourseService.java"]
+    ISchoolService["ISchoolService.java"]
+
+    Service --> ICourseReservationService
+    Service --> ICourseService
+    Service --> ISchoolService
+```
+
+---
+
+### **16. `constants` 目录**
+
+```mermaid
+graph TD
+    Constants["constants"]
+    SystemConstants["SystemConstants.java"]
+
+    Constants --> SystemConstants
+```
+
 
 ## 运行环境
 
