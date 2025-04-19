@@ -22,23 +22,103 @@ HGH-AI 是一个基于 Spring Boot 和 AI 技术的大模型应用。它集成�
 
 ## 目录结构
 
-src\main\java\com\hgh\ai\config: [CommonConfiguration.java,MvcConfiguration.java]
-src\main\java\com\hgh\ai\repository: [ChatHistoryRepository.java,FileRepository.java,InMemoryChatHistoryRepository.java,LocalPdfFileRepository.java]
-src\main\java\com\hgh\ai\controller: [ChatController.java,ChatHistoryController.java,CustomerServiceController.java,GameController.java,PdfController.java]
-src\main\java\com\hgh\ai: [HghAiApplication.java,MtAiApplication.java]
-src\main\java\com\hgh\ai\entity\query: [CourseQuery.java]
-src\main\java\com\hgh\ai\tools: [CourseTools.java]
-src\main\java\com\hgh\ai\mapper: [CourseMapper.java,CourseReservationMapper.java,SchoolMapper.java]
-src\main\java\com\hgh\ai\service\impl: [CourseReservationServiceImpl.java,CourseServiceImpl.java,SchoolServiceImpl.java]
-src\main\java\com\hgh\ai\entity\vo: [MessageVO.java,Result.java]
-: [README.md,chat-history.json,chat-memory.json,chat-pdf.json,chat-pdf.properties,pom.xml]
-src\main\java\com\hgh\ai\model: [AlibabaOpenAiChatModel.java]
-src\main\resources: [application-local.properties,application-local.yaml,application.yaml]
-src\main\java\com\hgh\ai\entity\po: [Course.java,CourseReservation.java,Msg.java,School.java]
-src\main\resources\mapper: [CourseMapper.xml,CourseReservationMapper.xml,SchoolMapper.xml]
-src\main\java\com\hgh\ai\utils: [VectorDistanceUtils.java]
-src\main\java\com\hgh\ai\service: [ICourseReservationService.java,ICourseService.java,ISchoolService.java]
-src\main\java\com\hgh\ai\constants: [SystemConstants.java]
+```mermaid
+graph TD
+    Root["."]
+    Config["config"]
+    Repository["repository"]
+    Controller["controller"]
+    MainJava["java/com/hgh/ai"]
+    EntityQuery["entity/query"]
+    Tools["tools"]
+    Mapper["mapper"]
+    ServiceImpl["service/impl"]
+    EntityVo["entity/vo"]
+    Model["model"]
+    Resources["resources"]
+    EntityPo["entity/po"]
+    Utils["utils"]
+    Service["service"]
+    Constants["constants"]
+
+    Root --> Config
+    Root --> Repository
+    Root --> Controller
+    Root --> MainJava
+    Root --> README.md
+    Root --> chat-history.json
+    Root --> chat-memory.json
+    Root --> chat-pdf.json
+    Root --> chat-pdf.properties
+    Root --> pom.xml
+
+    MainJava --> EntityQuery
+    MainJava --> Tools
+    MainJava --> Mapper
+    MainJava --> ServiceImpl
+    MainJava --> EntityVo
+    MainJava --> Model
+    MainJava --> EntityPo
+    MainJava --> Utils
+    MainJava --> Service
+    MainJava --> Constants
+
+    Config --> CommonConfiguration.java
+    Config --> MvcConfiguration.java
+
+    Repository --> ChatHistoryRepository.java
+    Repository --> FileRepository.java
+    Repository --> InMemoryChatHistoryRepository.java
+    Repository --> LocalPdfFileRepository.java
+
+    Controller --> ChatController.java
+    Controller --> ChatHistoryController.java
+    Controller --> CustomerServiceController.java
+    Controller --> GameController.java
+    Controller --> PdfController.java
+
+    MainJava --> HghAiApplication.java
+    MainJava --> MtAiApplication.java
+
+    EntityQuery --> CourseQuery.java
+
+    Tools --> CourseTools.java
+
+    Mapper --> CourseMapper.java
+    Mapper --> CourseReservationMapper.java
+    Mapper --> SchoolMapper.java
+
+    ServiceImpl --> CourseReservationServiceImpl.java
+    ServiceImpl --> CourseServiceImpl.java
+    ServiceImpl --> SchoolServiceImpl.java
+
+    EntityVo --> MessageVO.java
+    EntityVo --> Result.java
+
+    Model --> AlibabaOpenAiChatModel.java
+
+    Resources --> application-local.properties
+    Resources --> application-local.yaml
+    Resources --> application.yaml
+
+    EntityPo --> Course.java
+    EntityPo --> CourseReservation.java
+    EntityPo --> Msg.java
+    EntityPo --> School.java
+
+    Resources --> mapper[/"mapper"/]
+    mapper --> CourseMapper.xml
+    mapper --> CourseReservationMapper.xml
+    mapper --> SchoolMapper.xml
+
+    Utils --> VectorDistanceUtils.java
+
+    Service --> ICourseReservationService.java
+    Service --> ICourseService.java
+    Service --> ISchoolService.java
+
+    Constants --> SystemConstants.java
+```
 
 ## 运行环境
 
